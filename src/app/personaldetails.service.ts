@@ -6,13 +6,16 @@ import{HttpClient,HttpHeaders,HttpErrorResponse} from "@angular/common/http";
 import{catchError} from 'rxjs/operators';
 import { IncomeDetails } from './income-details';
 import { LoanDetails } from './loan-details';
+import { ApplicationDetails } from './application-details';
 import { Account } from './account';
 @Injectable({
   providedIn: 'root'
 })
 export class PersonaldetailsService {
-  private apiServer="http://localhost:3751/api";
-  
+  userlogin(value: any) {
+    throw new Error('Method not implemented.');
+  }
+  private apiServer="http://localhost:27614/api";
   httpOptions={
     headers: new HttpHeaders({
       'Content-Type':'application/json'
@@ -27,15 +30,16 @@ export class PersonaldetailsService {
       catchError(this.errorHandler)
     )
   }
-  Login(user: Personaldetails) {
-    return this.httpClient.post(this.apiServer+'/PersonalDetails/Login/', JSON.stringify(user), this.httpOptions);
-  }
+
+
   incomedetails(incomedetails:any):Observable<IncomeDetails>{
     return this.httpClient.post<IncomeDetails>(this.apiServer+'/IncomeDetails/',JSON.stringify(incomedetails),this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )
   }
+
+
   loandetails(loandetails:any):Observable<LoanDetails>{
     return this.httpClient.post<LoanDetails>(this.apiServer+'/LoanDetails/',JSON.stringify(loandetails),this.httpOptions)
     .pipe(
@@ -48,6 +52,22 @@ export class PersonaldetailsService {
    accountdetailsByUserName(username: any):Observable<Account>{
     return this.httpClient.get<Account>(this.apiServer+'/UserDashBoard/'+username)
    }
+
+  login(register:Personaldetails){
+    return this.httpClient.post(this.apiServer + '/PersonalDetails/login/', JSON.stringify(register), this.httpOptions)
+    
+  } 
+  GetId(name:string){
+    return this.httpClient.get<number>(this.apiServer+'/LoanDetails/'+name);
+  }
+  applicationdetails(application:any):Observable<ApplicationDetails>{
+    return this.httpClient.post<ApplicationDetails>(this.apiServer+'/ApplicationDetails/',JSON.stringify(application),this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
+
+
   errorHandler(error: { error: { message: string; }; status: any; message: any; }) {
     let errorMessage = '';
     if(error.error instanceof ErrorEvent) {

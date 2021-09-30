@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Personaldetails } from '../personaldetails';
+import { Router } from '@angular/router';
 import { PersonaldetailsService } from '../personaldetails.service';
-import { Router,ActivatedRoute } from '@angular/router';
+import { ConstantPool } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-user',
@@ -10,19 +13,32 @@ import { Router,ActivatedRoute } from '@angular/router';
 })
 export class UserComponent implements OnInit {
 
+  message!:string;
+  register!:Personaldetails;
   LoginForm=new FormGroup({
     Username:new FormControl(),
     Password:new FormControl()
   });
-  constructor(private service:PersonaldetailsService, private route:Router) { }
+  constructor(private service:PersonaldetailsService,private router:Router) { }
 
   ngOnInit(): void {
   }
-  msg!:string
-  
-  Login(){
-    console.log(this.LoginForm)
-    this.service.Login(this.LoginForm.value).subscribe(data=>{ console.log(data)},error=>this.msg="Invalid Login!") 
-    this.route.navigate(['userdash/username',{username:this.LoginForm.value.Username}]);
-     }
+
+  submit()
+  {
+    // this.register=this.LoginForm.value
+    // console.log(this.register)
+
+    this.service.login(this.LoginForm.value).subscribe(res => {
+      console.log(res)
+      console.log('Login successful')
+      this.router.navigate(['userdash'])
+    },
+    error=>this.message="Incorrect details"
+    
+    );
+
+    
+  }
+
 }
